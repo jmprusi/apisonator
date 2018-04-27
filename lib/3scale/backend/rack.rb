@@ -5,6 +5,10 @@ require '3scale/backend/rack/exception_catcher'
 require '3scale/backend'
 
 require 'rack'
+require 'opentracing'
+require 'jaeger/client'
+require 'spanmanager'
+require 'rack/tracer'
 
 module ThreeScale
   module Backend
@@ -13,9 +17,13 @@ module ThreeScale
         rack.instance_eval do
           Backend::Logging::External.setup_rack self
 
+
           loggers = Backend.configuration.request_loggers
           log_writers = Backend::Logging::Middleware.writers loggers
           use Backend::Logging::Middleware, writers: log_writers
+
+          OpenTracing.global_tracer = SpanManager::Tracer.new(Jaeger::Client.build(host: 'jaeger-agent', port: 6831, service_name: 'apisonator', flush_interval: 1))
+          use ::Rack::Tracer
 
           map "/internal" do
             require_relative "#{Backend::Util.root_dir}/app/api/api"

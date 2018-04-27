@@ -58,5 +58,13 @@ gem 'resque', git: 'https://github.com/3scale/resque', branch: '3scale'
 gem 'rack', '= 2.0.3'
 gem 'sinatra', '~> 2.0.1'
 gem 'sinatra-contrib', '~> 2.0.1'
+
+# Opentracing
+
+gem 'rack-tracer', '= 0.4.0'
+gem 'opentracing', '= 0.4.0'
+gem 'spanmanager', '= 0.3.0'
+gem 'jaeger-client', '= 0.4.2'
+
 # Optional external error logging services
 gem 'bugsnag', '~> 6', require: nil
